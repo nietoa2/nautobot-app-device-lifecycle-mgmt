@@ -56,10 +56,9 @@ class PercentageColumn(tables.Column):
 
 
 class HardwareLCMTable(BaseTable):
-    """Table for list view."""
-
     pk = ToggleColumn()
-    name = tables.TemplateColumn(
+
+    reference = tables.TemplateColumn(
         template_code="""{% if record.device_type %}
                     <a href="{% url 'dcim:devicetype' pk=record.device_type.pk %}">{{ record.device_type }}</a>
                     {% elif record.inventory_item %}
@@ -68,6 +67,7 @@ class HardwareLCMTable(BaseTable):
         verbose_name="Name",
         orderable=False,
     )
+
     documentation_url = tables.TemplateColumn(
         template_code="""{% if record.documentation_url %}
                     <a href="{{ record.documentation_url }}" target="_blank" data-toggle="tooltip" data-placement="left" title="{{ record.documentation_url }}">
@@ -78,15 +78,14 @@ class HardwareLCMTable(BaseTable):
                     {% endif %}""",
         verbose_name="Documentation",
     )
+
     actions = ButtonsColumn(HardwareLCM, buttons=("changelog", "edit", "delete"))
 
     class Meta(BaseTable.Meta):
-        """Meta attributes."""
-
         model = HardwareLCM
         fields = (
             "pk",
-            "name",
+            "reference",
             "release_date",
             "end_of_sale",
             "end_of_support",
@@ -95,7 +94,6 @@ class HardwareLCMTable(BaseTable):
             "documentation_url",
             "actions",
         )
-
 
 class SoftwareLCMTable(BaseTable):
     """Table for SoftwareLCMListView."""
